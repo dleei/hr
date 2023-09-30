@@ -10,7 +10,10 @@ export default {
   },
   mutations: {
     setToken(state, token) {
+      // 将 token 存储到 state
       state.token = token
+      // 将 token 存储到本地
+      setToken(token)
     },
     setUserInfo(state, userInfo) {
       state.userInfo = userInfo
@@ -25,6 +28,7 @@ export default {
     async getUserInfo(context) {
       const userInfo = await getUserInfo()
       context.commit('setUserInfo', userInfo)
+      console.log(this.userInfo)
     }
   }
 }
