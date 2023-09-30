@@ -1,8 +1,8 @@
 <template>
-  <div class="box">
+  <div>
     <el-card>
       <el-row type="flex" justify="center">
-        <h2>人力资源后台管理系统</h2>
+        <img src="../../assets/login_title.png" alt="">
       </el-row>
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item label="手机号" prop="mobile">
@@ -46,10 +46,8 @@ export default {
       // 登录前表单兜底校验
       this.$refs.form.validate()
       await this.$store.dispatch('user/login', this.form)
-      // 跳转到首页
-      //  * this.$route.query.redirect 优化跳转到上次登录前的页面
       // 提示用户登录成功
-      this.$message.success('登录成功')
+      this.$message.success('登录成功') // this.$route.query.redirect 优化跳转到上次登录前的页面
       // 跳转到首页
       this.$router.push('/')
     }

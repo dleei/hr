@@ -7,7 +7,10 @@
 <script>
 
 export default {
-  name: 'Dashboard'
+  name: 'Dashboard',
+  created() {
+    this.$store.dispatch('user/getUserInfo')
+  }
 
 }
 </script>
