@@ -1,4 +1,5 @@
 import axios from 'axios'
+import store from '@/store'
 
 const instance = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // 读取环境变量中设置的默认基地址
@@ -7,6 +8,8 @@ const instance = axios.create({
 // 添加请求拦截器
 instance.interceptors.request.use(function(config) {
   // 在发送请求之前做些什么
+  // 请求之前携带 token
+  config.headers.Authorization = `Bearer ${store.getters.token}`
   return config
 }, function(error) {
   // 对请求错误做些什么

@@ -1,5 +1,5 @@
-import { getUserInfo } from '@/api/user'
-import { setToken, getToken } from '@/utils/auth'
+import { getUserInfoApi } from '@/api/user'
+import { setToken, getToken, removeToken } from '@/utils/auth'
 import request from '@/utils/request'
 
 export default {
@@ -17,6 +17,9 @@ export default {
     },
     setUserInfo(state, userInfo) {
       state.userInfo = userInfo
+    },
+    removeToken(state) {
+      state.token = null
     }
   },
   actions: {
@@ -26,9 +29,14 @@ export default {
       context.commit('setToken', res.data)
     },
     async getUserInfo(context) {
-      const userInfo = await getUserInfo()
-      context.commit('setUserInfo', userInfo)
-      console.log(this.userInfo)
+      const res = await getUserInfoApi()
+      context.commit('setUserInfo', res.data)
+    },
+    logout(context) {
+      // 清除本地 token
+      removeToken()
+      // 清除 state 里面的 token
+      context.commit('removeToken')
     }
   }
 }

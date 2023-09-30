@@ -51,7 +51,67 @@ export const constantRoutes = [
       path: 'dashboard',
       name: 'Dashboard',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
+    }]
+  },
+  {
+    path: '/department',
+    component: Layout,
+    children: [{
+      path: '',
+      name: 'department',
+      component: () => import('@/views/department/index'),
+      meta: { title: '组织', icon: 'tree' }
+    }]
+  },
+  {
+    path: '/permission',
+    component: Layout,
+    children: [{
+      path: '',
+      name: 'permission',
+      component: () => import('@/views/permission/index'),
+      meta: { title: '权限', icon: 'permission' }
+    }]
+  },
+  {
+    path: '/employee',
+    component: Layout,
+    children: [{
+      path: '',
+      name: 'employee',
+      component: () => import('@/views/employee/index'),
+      meta: { title: '员工', icon: 'employee' }
+    }]
+  },
+  {
+    path: '/roles',
+    component: Layout,
+    children: [{
+      path: '',
+      name: 'role',
+      component: () => import('@/views/role/index'),
+      meta: { title: '角色', icon: 'role' }
+    }]
+  },
+  {
+    path: '/salary',
+    component: Layout,
+    children: [{
+      path: '',
+      name: 'salary',
+      component: () => import('@/views/salary/index'),
+      meta: { title: '工资', icon: 'salary' }
+    }]
+  },
+  {
+    path: '/social',
+    component: Layout,
+    children: [{
+      path: '',
+      name: 'social',
+      component: () => import('@/views/social/index'),
+      meta: { title: '社保', icon: 'social' }
     }]
   },
 

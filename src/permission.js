@@ -20,6 +20,12 @@ router.beforeEach(async(to, from, next) => {
       // 关闭进度条,此处不会触发后置守卫,无法自动关闭后置守卫需要手动关闭
       nProgress.done()
     } else {
+      // 进入页面就获取用户信息
+      // 判断是否已经有了用户信息,没有就获取,不要重复获取
+      if (!store.getters.userInfo.userId) {
+        store.dispatch('user/getUserInfo')
+      }
+      // 放行
       next()
     }
   } else { // 没有 token

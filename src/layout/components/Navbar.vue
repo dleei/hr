@@ -9,7 +9,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <img :src="staffPhoto" class="user-avatar">
+          <span class="username"> {{ username }} </span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu class="user-dropdown">
@@ -21,7 +22,7 @@
           </a>
           <el-dropdown-item>修改密码</el-dropdown-item>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">退出登录</span>
+            <span style="display:block;" @click="logout">退出登录</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -42,7 +43,9 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar'
+      'avatar',
+      'username',
+      'staffPhoto'
     ])
   },
   methods: {
@@ -51,7 +54,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      this.$router.push(`/login`)
     }
   }
 }
@@ -97,7 +100,6 @@ export default {
       height: 100%;
       font-size: 18px;
       color: #5a5e66;
-      vertical-align: text-bottom;
 
       &.hover-effect {
         cursor: pointer;
@@ -115,12 +117,14 @@ export default {
       .avatar-wrapper {
         margin-top: 5px;
         position: relative;
+        display: flex;
+        align-items: center;
 
         .user-avatar {
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 10px;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
         }
 
         .el-icon-caret-bottom {
@@ -133,5 +137,10 @@ export default {
       }
     }
   }
+}
+
+.username {
+  font-size: 18px;
+  margin: 0 15px;
 }
 </style>
