@@ -115,3 +115,15 @@ export function param2Obj(url) {
   })
   return obj
 }
+
+export function transListToTree(list, pid = 0) {
+  const arr = []
+  list.forEach(item => {
+    if (item.pid === pid) {
+      arr.push(item)
+      // 继续查找 ,给里面的 children 树形赋值
+      item.children = transListToTree(list, item.id)
+    }
+  })
+  return arr
+}
