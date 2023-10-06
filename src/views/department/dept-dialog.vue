@@ -1,5 +1,5 @@
 <template>
-  <dialog title="修改部门" :visible="showDialog" close="close">
+  <dialog title="添加部门" :visible="showDialog" close="close">
     内容区域
   </dialog>
 </template>
