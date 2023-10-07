@@ -18,6 +18,8 @@ instance.interceptors.request.use(function(config) {
 
 // 添加响应拦截器
 instance.interceptors.response.use(function(response) {
+  // 设置拦截条件如果检测到响应的数据类型为 Bolb 文件,直接返回响应的对应文件
+  if (response.data instanceof Blob) return response.data
   // 对响应数据做点什么
   //  * 数据脱壳
   return response.data

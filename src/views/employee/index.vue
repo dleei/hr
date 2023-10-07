@@ -2,17 +2,42 @@
   <div class="container">
     <div class="app-container">
       <div class="left">
-        <el-input size="mini" placeholder="请输入角色名" />
+        <!-- 左树 -->
+        <el-input
+          v-model="queryData.keywords"
+          size="mini"
+          placeholder="请输入角色名"
+          @input="handleSearch"
+        />
+        <!--
+          highlight-current 高亮当前点击的节点
+          expand-on-click-node 设置点击任意位置都展开,只有点击下箭头才会展开
+          -->
+        <el-tree
+          ref="tree"
+          node-key="id"
+          default-expand-all
+          :data="treeData"
+          :props="defaultProps"
+          highlight-current
+          :expand-on-click-node="false"
+          @current-change="selectNode"
+        />
       </div>
       <div class="right">
+        <!-- 右表 -->
         <el-row type="flex" justify="end">
-          <el-button type="primary" size="mini">添加员工</el-button>
+          <el-button type="primary" size="mini" @click="addEmployee(row.id)">添加员工</el-button>
           <el-button size="mini">excel导入</el-button>
-          <el-button size="mini">excel导出</el-button>
+          <el-button size="mini" @click="exportExcel">excel导出</el-button>
         </el-row>
-        <el-table border stripe style="margin-top:20px" :data="list">
+
+        <el-table border stripe style="margin-top:20px" :data="list" :header-cell-style="{'background': '#f3f4f7'}">
           <el-table-column label="头像" width="60px" prop="staffPhoto">
-            <!-- <img :src="staffPhoto"> -->
+            <template v-slot="scoped">
+              <el-avatar v-if="scoped.row.staffPhoto" :size="30" :src="scoped.row.staffPhoto" />
+              <span v-else class="username">{{ scoped.row.username?.charAt(0) }}</span>
+            </template>
           </el-table-column>
           <el-table-column v-slot="scoped" label="姓名" prop="username">
             {{ scoped.row.username }}
@@ -26,8 +51,8 @@
           <el-table-column v-slot="scoped" label="聘用形式" prop="formOfEmployment">
             {{ scoped.row.formOfEmployment === 1 ? '正式' : '非正式' }}
           </el-table-column>
-          <el-table-column v-slot="scoped" label="部门" prop="departmentId">
-            {{ scoped.row.departmentId }}
+          <el-table-column v-slot="scoped" label="部门" prop="departmentName">
+            {{ scoped.row.departmentName }}
           </el-table-column>
           <el-table-column v-slot="scoped" label="入职时间" sortable prop="timeOfEntry">
             {{ scoped.row.timeOfEntry }}
@@ -59,6 +84,9 @@
 
 <script>
 import { getEmployeeList } from '@/api/employee'
+import { exportExcel, getDepartments } from '@/api/department'
+import { transListToTree } from '@/utils'
+import FileSaver from 'file-saver'
 export default {
   name: 'Employee',
   data() {
@@ -67,9 +95,16 @@ export default {
       currentPage: 1,
       queryData: {
         page: 1,
-        pagesize: 4
+        pagesize: 4,
+        keywords: '',
+        departmentId: ''
       },
-      list: []
+      list: [],
+      treeData: [],
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      }
     }
   },
   created() {
@@ -77,8 +112,19 @@ export default {
   },
   methods: {
     async loadData() {
-      const res = await getEmployeeList(this.queryData)
-      // console.log(res)
+      const res1 = await getDepartments() // 左边的树状图
+      // 获取第一个节点的 id
+      const id = res1.data[0].id
+      this.queryData.departmentId = id
+      this.treeData = transListToTree(res1.data)
+      this.loadEmployee()
+      // 默认进入时,设置第一个节点高亮
+      this.$nextTick(() => {
+        this.$refs.tree.setCurrentKey(id)
+      })
+    },
+    async loadEmployee() {
+      const res = await getEmployeeList(this.queryData) // 右边的表格
       this.list = res.data.rows
       this.total = res.total
     },
@@ -92,6 +138,25 @@ export default {
     handleCurrentChange(page) {
       this.queryData.page = page
       this.loadData()
+    },
+    addEmployee(id) {
+
+    },
+    handleSearch() {
+      this.queryData.page = 1
+      this.loadEmployee()
+    },
+    selectNode(data) {
+      this.queryData.departmentId = data.id // 将当前点击选中的节点的 id 设置为请求数据的部门 id
+    },
+    async exportExcel() {
+      const res = await exportExcel()
+      // 使用 file-saver 包将返回的 Blob 文件保存为 excel 文件
+      /**
+       * 参数一: 返回的 blob 文件
+       * 参数二: 保存为 excel 文件的文件名
+       */
+      FileSaver.saveAs(res, '员工信息表.xlsx')
     }
   }
 }
@@ -113,5 +178,19 @@ export default {
   flex: 1;
   padding: 20px;
 }
+}
+
+.el-tree {
+  margin-top: 20px;
+}
+.username {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px !important;
+  height: 30px !important;
+  background-color: aquamarine;
+  border-radius: 50%;
+  color: #fff;
 }
 </style>
