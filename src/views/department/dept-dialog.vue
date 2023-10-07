@@ -9,7 +9,7 @@ export default {
   props: {
     showDialog: {
       type: Boolean,
-      required: true
+      require: true
     }
   },
   methods: {

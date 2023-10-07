@@ -28,7 +28,7 @@
         <!-- 右表 -->
         <el-row type="flex" justify="end">
           <el-button type="primary" size="mini" @click="addEmployee(row.id)">添加员工</el-button>
-          <el-button size="mini">excel导入</el-button>
+          <el-button size="mini" @click="openImportDialog">excel导入</el-button>
           <el-button size="mini" @click="exportExcel">excel导出</el-button>
         </el-row>
 
@@ -79,6 +79,7 @@
         </el-row>
       </div>
     </div>
+    <import-excel :show-import-dialog.sync="showImportDialog" />
   </div>
 </template>
 
@@ -87,8 +88,10 @@ import { getEmployeeList } from '@/api/employee'
 import { exportExcel, getDepartments } from '@/api/department'
 import { transListToTree } from '@/utils'
 import FileSaver from 'file-saver'
+import importExcel from './import-excel.vue'
 export default {
   name: 'Employee',
+  components: { importExcel },
   data() {
     return {
       total: 0,
@@ -104,7 +107,8 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'name'
-      }
+      },
+      showImportDialog: false
     }
   },
   created() {
@@ -156,7 +160,10 @@ export default {
        * 参数一: 返回的 blob 文件
        * 参数二: 保存为 excel 文件的文件名
        */
-      FileSaver.saveAs(res, '员工信息表.xlsx')
+      FileSaver.saveAs(res, '员工信息表.xlsx') // BUG 员工信息表导出
+    },
+    openImportDialog() {
+      this.showImportDialog = true
     }
   }
 }
