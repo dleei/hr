@@ -27,7 +27,7 @@
       <div class="right">
         <!-- 右表 -->
         <el-row type="flex" justify="end">
-          <el-button type="primary" size="mini" @click="addEmployee(row.id)">添加员工</el-button>
+          <el-button type="primary" size="mini" @click="$router.push('@/views/employee/detail.vue')">添加员工</el-button>
           <el-button size="mini" @click="openImportDialog">excel导入</el-button>
           <el-button size="mini" @click="exportExcel">excel导出</el-button>
         </el-row>
@@ -58,10 +58,15 @@
             {{ scoped.row.timeOfEntry }}
           </el-table-column>
           <el-table-column label="操作">
-            <template>
+            <template v-slot="scoped">
               <el-button type="text" size="mini">查看</el-button>
               <el-button type="text" size="mini">角色</el-button>
-              <el-button type="text" size="mini">删除</el-button>
+              <el-popconfirm
+                title="确认要删除吗?"
+                @confirm="confirmDel(scoped)"
+              >
+                <el-button slot="reference" type="text" size="mini" class="del-button-margin-left-10">删除</el-button>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -79,16 +84,16 @@
         </el-row>
       </div>
     </div>
-    <import-excel :show-import-dialog.sync="showImportDialog" />
+    <import-excel :show-excel-dialog.sync="showExcelDialog" />
   </div>
 </template>
 
 <script>
 import { getEmployeeList } from '@/api/employee'
-import { exportExcel, getDepartments } from '@/api/department'
+import { delEmployee, exportExcel, getDepartments } from '@/api/department'
 import { transListToTree } from '@/utils'
 import FileSaver from 'file-saver'
-import importExcel from './import-excel.vue'
+import importExcel from './component/import-excel.vue'
 export default {
   name: 'Employee',
   components: { importExcel },
@@ -108,7 +113,7 @@ export default {
         children: 'children',
         label: 'name'
       },
-      showImportDialog: false
+      showExcelDialog: false
     }
   },
   created() {
@@ -143,9 +148,6 @@ export default {
       this.queryData.page = page
       this.loadData()
     },
-    addEmployee(id) {
-
-    },
     handleSearch() {
       this.queryData.page = 1
       this.loadEmployee()
@@ -163,7 +165,11 @@ export default {
       FileSaver.saveAs(res, '员工信息表.xlsx') // BUG 员工信息表导出
     },
     openImportDialog() {
-      this.showImportDialog = true
+      this.showExcelDialog = true
+    },
+    async confirmDel(id) {
+      const res = await delEmployee(id)
+      console.log(res)
     }
   }
 }
@@ -199,5 +205,8 @@ export default {
   background-color: aquamarine;
   border-radius: 50%;
   color: #fff;
+}
+.del-button-margin-left-10 {
+  margin-left: 10px;
 }
 </style>

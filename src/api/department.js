@@ -5,3 +5,5 @@ export const getDepartments = () => request.get('company/department')
 export const exportExcel = () => request.get('/sys/user/export', { responseType: 'Blob' })
 
 export const downloadExcel = () => request.get('/sys/user/import/template', { responseType: 'Blob' })
+
+export const delEmployee = id => request.delete(`/sys/user/${id}`)

@@ -5,7 +5,12 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '@/layout'
-
+import department from '@/store/modules/department'
+import employee from '@/store/modules/employee'
+import permission from '@/store/modules/permission'
+import roles from '@/store/modules/roles'
+import salary from '@/store/modules/salary'
+import social from '@/store/modules/social'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -17,7 +22,7 @@ import Layout from '@/layout'
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
  * meta : {
-    roles: ['admin','editor']    control the page roles (you can set multiple roles)
+    : ['admin','editor']    control the page roles (you can set multiple roles)
     title: 'title'               the name show in sidebar and breadcrumb (recommend set)
     icon: 'svg-name'/'el-icon-x' the icon show in the sidebar
     breadcrumb: false            if set false, the item will hidden in breadcrumb(default is true)
@@ -54,67 +59,12 @@ export const constantRoutes = [
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-  {
-    path: '/department',
-    component: Layout,
-    children: [{
-      path: '',
-      name: 'department',
-      component: () => import('@/views/department/index'),
-      meta: { title: '组织', icon: 'tree' }
-    }]
-  },
-  {
-    path: '/permission',
-    component: Layout,
-    children: [{
-      path: '',
-      name: 'permission',
-      component: () => import('@/views/permission/index'),
-      meta: { title: '权限', icon: 'permission' }
-    }]
-  },
-  {
-    path: '/employee',
-    component: Layout,
-    children: [{
-      path: '',
-      name: 'employee',
-      component: () => import('@/views/employee/index'),
-      meta: { title: '员工', icon: 'employee' }
-    }]
-  },
-  {
-    path: '/roles',
-    component: Layout,
-    children: [{
-      path: '',
-      name: 'role',
-      component: () => import('@/views/role/index'),
-      meta: { title: '角色', icon: 'role' }
-    }]
-  },
-  {
-    path: '/salary',
-    component: Layout,
-    children: [{
-      path: '',
-      name: 'salary',
-      component: () => import('@/views/salary/index'),
-      meta: { title: '工资', icon: 'salary' }
-    }]
-  },
-  {
-    path: '/social',
-    component: Layout,
-    children: [{
-      path: '',
-      name: 'social',
-      component: () => import('@/views/social/index'),
-      meta: { title: '社保', icon: 'social' }
-    }]
-  },
-
+  department,
+  employee,
+  permission,
+  roles,
+  social,
+  salary,
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]
