@@ -27,7 +27,7 @@
       <div class="right">
         <!-- 右表 -->
         <el-row type="flex" justify="end">
-          <el-button type="primary" size="mini" @click="$router.push('@/views/employee/detail.vue')">添加员工</el-button>
+          <el-button type="primary" size="mini" @click="$router.push('employee/detail')">添加员工</el-button>
           <el-button size="mini" @click="openImportDialog">excel导入</el-button>
           <el-button size="mini" @click="exportExcel">excel导出</el-button>
         </el-row>
