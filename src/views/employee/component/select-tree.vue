@@ -1,5 +1,5 @@
 <template>
-  <el-cascader :options="depts" size="mini" :props="{label: 'name'}" />
+  <el-cascader :options="depts" size="mini" :props="{label: 'name',value: 'id'}" />
 </template>
 
 <script>

@@ -32,7 +32,7 @@
           <el-button size="mini" @click="exportExcel">excel导出</el-button>
         </el-row>
 
-        <el-table border stripe style="margin-top:20px" :data="list" :header-cell-style="{'background': '#f3f4f7'}">
+        <el-table stripe style="margin-top:20px" :data="list" :header-cell-style="{'background': '#f3f4f7'}">
           <el-table-column label="头像" width="60px" prop="staffPhoto">
             <template v-slot="scoped">
               <el-avatar v-if="scoped.row.staffPhoto" :size="30" :src="scoped.row.staffPhoto" />
@@ -58,15 +58,16 @@
             {{ scoped.row.timeOfEntry }}
           </el-table-column>
           <el-table-column label="操作">
-            <template v-slot="scoped">
+            <template v-slot="{ row }">
               <el-button type="text" size="mini">查看</el-button>
               <el-button type="text" size="mini">角色</el-button>
-              <el-popconfirm
-                title="确认要删除吗?"
-                @confirm="confirmDel(scoped)"
-              >
-                <el-button slot="reference" type="text" size="mini" class="del-button-margin-left-10">删除</el-button>
-              </el-popconfirm>
+              <el-button
+                slot="reference"
+                type="text"
+                size="mini"
+                class="del-button-margin-left-10"
+                @click="open(row.id)"
+              >删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -167,9 +168,15 @@ export default {
     openImportDialog() {
       this.showExcelDialog = true
     },
-    async confirmDel(id) {
-      const res = await delEmployee(id)
-      console.log(res)
+    async open(id) {
+      this.$confirm('此操作将永久删除, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async() => {
+        const { message, code } = await delEmployee(id)
+        code === 5001 ? this.$message.error(message) && this.loadData() : this.$message.success(message)
+      })
     }
   }
 }
