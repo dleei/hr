@@ -11,13 +11,7 @@
         <el-input v-model="userInfo.mobile" style="width: 30%" size="mini" />
       </el-form-item>
       <el-form-item label-width="180px" label="部门" prop="departmentId">
-        <template>
-          <!-- <el-cascader
-            v-model="value"
-            :options="departmentOptions"
-            @change="handleChange"
-          /> -->
-        </template>
+        <selectTree v-model="userInfo.departmentId" />
       </el-form-item>
       <el-form-item label-width="180px" label="聘用形式" prop="formOfEmployment">
         <el-select v-model="userInfo.formOfEmployment" style="width: 30%" size="mini" placeholder="请选择">
@@ -58,13 +52,11 @@
 <script>
 import userAvatar from '@/views/employee/component/userImg.vue'
 import { addEmployee } from '@/api/employee'
+import selectTree from '@/views/employee/component/select-tree.vue'
 export default {
-  components: { userAvatar },
+  components: { userAvatar, selectTree },
   data() {
     return {
-      // departmentOptions: [
-      //   { value: '' ,label: ''}
-      // ],
       userInfo: {
         username: '', // 员工姓名
         mobile: '', // 员工手机号

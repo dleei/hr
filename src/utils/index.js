@@ -121,8 +121,9 @@ export function transListToTree(list, pid = 0) {
   list.forEach(item => {
     if (item.pid === pid) {
       arr.push(item)
+      const children = transListToTree(list, item.id)
       // 继续查找 ,给里面的 children 树形赋值
-      item.children = transListToTree(list, item.id)
+      if (children.length) item.children = children
     }
   })
   return arr

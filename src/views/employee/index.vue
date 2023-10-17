@@ -183,9 +183,9 @@ export default {
   width: 100%;
   height: 100vh;
   .left {
-    padding-right: 20px;
+    padding: 20px;
     width: 280px;
-    border-right: 1px solid #333;
+    border-right: 1px solid #f3f4f7;
   }
 }.right {
   flex: 1;
