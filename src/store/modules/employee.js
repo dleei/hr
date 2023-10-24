@@ -1,5 +1,6 @@
 import Layout from '@/layout'
 export default {
+  name: 'employee',
   path: '/employee',
   component: Layout,
   children: [

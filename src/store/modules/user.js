@@ -31,6 +31,7 @@ export default {
     async getUserInfo(context) {
       const res = await getUserInfoApi()
       context.commit('setUserInfo', res.data)
+      return res.data
     },
     logout(context) {
       // 清除本地 token

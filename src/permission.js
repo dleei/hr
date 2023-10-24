@@ -5,6 +5,7 @@ import nProgress from 'nprogress' // 引入进度条
 import 'nprogress/nprogress.css' // 引入进度条样式
 // 配置进度条,是否显示右侧加载过程
 nProgress.configure({ showSpinner: false })
+import { dynamicRoute } from './router'
 // 白名单
 const whiteList = ['/login']
 
@@ -23,10 +24,21 @@ router.beforeEach(async(to, from, next) => {
       // 进入页面就获取用户信息
       // 判断是否已经有了用户信息,没有就获取,不要重复获取
       if (!store.getters.userInfo.userId) {
-        store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo')
+        console.log(dynamicRoute)
+        const filterRouter = dynamicRoute.filter(item => {
+          // 在所有的权限列表中筛选中筛选出用户拥有的权限并返回
+          return roles.menus.includes(item.name)
+        })
+        console.log(filterRouter)
+        // 使用路由的 addRouters 方法,将筛选出来的动态路由添加到路由系统中去
+        router.addRoutes(filterRouter)
+        // 路由官方 bug ,重新定向到目标地点
+        next(to.path)
+      } else {
+        // 放行
+        next()
       }
-      // 放行
-      next()
     }
   } else { // 没有 token
     if (whiteList.includes(to.path)) { // 如果去的页面是 login 页面 放行
