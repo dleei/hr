@@ -28,6 +28,15 @@ if (process.env.NODE_ENV === 'production') {
   mockXHR()
 }
 
+Vue.directive('export', {
+  // 参数一: el 指令绑定的元素
+  // 参数二: binding 指令相关的参数
+  inserted(el, binding) {
+// 进行按钮控制时,判断用户是否具有操作该按钮的权限
+store.getters.userInfo?.roles?.point?.includes(binding.value)
+el.remove()
+  }
+})
 // set ElementUI lang to EN
 // Vue.use(ElementUI, { locale })
 // 如果想要中文版 element-ui，按如下方式声明

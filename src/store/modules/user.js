@@ -1,12 +1,13 @@
 import { getUserInfoApi } from '@/api/user'
 import { setToken, getToken, removeToken } from '@/utils/auth'
 import request from '@/utils/request'
-
+import { constantRoutes, resetRouter } from '@/router/index'
 export default {
   namespaced: true,
   state: {
     token: getToken() || '',
-    userInfo: {}
+    userInfo: {},
+    routes: constantRoutes
   },
   mutations: {
     setToken(state, token) {
@@ -20,6 +21,11 @@ export default {
     },
     removeToken(state) {
       state.token = null
+    },
+    setRouter(state, router) {
+      // 将动态路由和用户的具有访问权限的动态路由合并到 vuex 中存储
+      // 用户进入页面路由循环渲染时,直接读取 vuex 中的该用户所拥有的所有菜单项
+      state.routes = [...constantRoutes, ...router]
     }
   },
   actions: {
@@ -38,6 +44,8 @@ export default {
       removeToken()
       // 清除 state 里面的 token
       context.commit('removeToken')
+      // 重置路由
+      resetRouter()
     }
   }
 }

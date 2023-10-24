@@ -25,14 +25,15 @@ router.beforeEach(async(to, from, next) => {
       // 判断是否已经有了用户信息,没有就获取,不要重复获取
       if (!store.getters.userInfo.userId) {
         const { roles } = await store.dispatch('user/getUserInfo')
-        console.log(dynamicRoute)
         const filterRouter = dynamicRoute.filter(item => {
           // 在所有的权限列表中筛选中筛选出用户拥有的权限并返回
           return roles.menus.includes(item.name)
         })
-        console.log(filterRouter)
+        // 将过滤后的路由添加到 vuex 中
+        store.commit('user/setRouter', filterRouter)
         // 使用路由的 addRouters 方法,将筛选出来的动态路由添加到路由系统中去
-        router.addRoutes(filterRouter)
+        // 添加 404 路由地址到路由的最后面
+        router.addRoutes([...filterRouter, { path: '*', redirect: '/404', hidden: true }])
         // 路由官方 bug ,重新定向到目标地点
         next(to.path)
       } else {
