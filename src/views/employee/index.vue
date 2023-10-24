@@ -73,9 +73,9 @@
         </el-table>
         <el-row style="height:60px" type="flex" justify="end" align="middle">
           <el-pagination
-            :total="20"
+            :total="total"
             background
-            :page-sizes="[ 4, 6, 8]"
+            :page-sizes="[ 5, 10, 15]"
             :page-size="queryData.pagesize"
             :current-page="currentPage"
             layout="total, sizes, prev, pager, next, jumper"
@@ -100,11 +100,11 @@ export default {
   components: { importExcel },
   data() {
     return {
-      total: 0,
+      total: null,
       currentPage: 1,
       queryData: {
         page: 1,
-        pagesize: 4,
+        pagesize: 5,
         keywords: '',
         departmentId: ''
       },
@@ -122,11 +122,11 @@ export default {
   },
   methods: {
     async loadData() {
-      const res1 = await getDepartments() // 左边的树状图
+      const res = await getDepartments() // 左边的树状图
       // 获取第一个节点的 id
-      const id = res1.data[0].id
+      const id = res.data[0].id
       this.queryData.departmentId = id
-      this.treeData = transListToTree(res1.data)
+      this.treeData = transListToTree(res.data)
       this.loadEmployee()
       // 默认进入时,设置第一个节点高亮
       this.$nextTick(() => {
@@ -134,9 +134,9 @@ export default {
       })
     },
     async loadEmployee() {
-      const res = await getEmployeeList(this.queryData) // 右边的表格
-      this.list = res.data.rows
-      this.total = res.total
+      const { data } = await getEmployeeList(this.queryData) // 右边的表格
+      this.list = data.rows
+      this.total = data.total
     },
     fn(scoped) {
       console.log(scoped)
@@ -175,7 +175,7 @@ export default {
         type: 'warning'
       }).then(async() => {
         const { message, code } = await delEmployee(id)
-        code === 5001 ? this.$message.error(message) && this.loadData() : this.$message.success(message)
+        code === 50001 ? this.$message.error(message) && location.reload() : this.$message.success(message)
       })
     }
   }

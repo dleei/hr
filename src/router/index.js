@@ -35,6 +35,7 @@ import social from '@/store/modules/social'
  * a base page that does not have permission requirements
  * all roles can be accessed
  */
+// 对外导出静态路由
 export const constantRoutes = [
   {
     path: '/login',
@@ -61,16 +62,19 @@ export const constantRoutes = [
       }
     ]
   },
+
+  // 404 page must be placed at the end !!!
+  { path: '*', redirect: '/404', hidden: true }
+]
+// 对外导出动态路由,便于后续做用户的权限控制
+export const dynamicRoute = [
   department,
   employee,
   permission,
   roles,
   social,
-  salary,
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  salary
 ]
-
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
